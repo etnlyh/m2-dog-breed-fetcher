@@ -48,14 +48,18 @@ public class DogApiBreedFetcher implements BreedFetcher {
         try {
             Response response = client.newCall(request).execute();
             JSONObject responseBody = new JSONObject(response.body().string());
-            JSONArray responseBodyArray = responseBody.getJSONArray("message");
-            ArrayList<String> subBreeds = new ArrayList<>();
-            for (int i = 0; i < responseBodyArray.length(); i++) {
-                subBreeds.add(responseBodyArray.getString(i));
+            if (responseBody.getString("status").equalsIgnoreCase("error")) {
+                throw new BreedNotFoundException(breed);
+            } else {
+                JSONArray responseBodyArray = responseBody.getJSONArray("message");
+                List<String> subBreeds = new ArrayList<>();
+                for (int i = 0; i < responseBodyArray.length(); i++) {
+                    subBreeds.add(responseBodyArray.getString(i));
+                }
                 return subBreeds;
             }
         } catch (BreedNotFoundException bnfe) {
             throw new BreedNotFoundException(breed);
-        } return new ArrayList<>();
+        }
     }
 }
