@@ -1,13 +1,15 @@
 package dogapi;
 
 import org.junit.jupiter.api.Test;
+
+import java.io.IOException;
 import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 class CachingBreedFetcherTest {
 
     @Test
-    void testCachingAvoidsRedundantCalls() {
+    void testCachingAvoidsRedundantCalls() throws IOException {
         BreedFetcherForLocalTesting mock = new BreedFetcherForLocalTesting();
         CachingBreedFetcher cachingFetcher = new CachingBreedFetcher(mock);
 
@@ -44,8 +46,16 @@ class CachingBreedFetcherTest {
         BreedFetcherForLocalTesting mock = new BreedFetcherForLocalTesting();
         CachingBreedFetcher cachingFetcher = new CachingBreedFetcher(mock);
 
-        cachingFetcher.getSubBreeds("hound");
-        cachingFetcher.getSubBreeds("hound");
+        try {
+            cachingFetcher.getSubBreeds("hound");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        try {
+            cachingFetcher.getSubBreeds("hound");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
 
         assertEquals(1, cachingFetcher.getCallsMade(),
                 "Fetcher should only be called once due to caching. " +
