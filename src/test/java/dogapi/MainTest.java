@@ -19,7 +19,7 @@ class MainTest {
     void getNumberOfSubBreedsInvalidBreed() throws IOException {
         BreedFetcherForLocalTesting mock = new BreedFetcherForLocalTesting();
 
-        assertEquals(-1, Main.getNumberOfSubBreeds("cat", mock));
+        assertEquals(0, Main.getNumberOfSubBreeds("cat", mock));
     }
 
     @Test

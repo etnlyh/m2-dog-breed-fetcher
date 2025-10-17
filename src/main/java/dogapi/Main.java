@@ -30,8 +30,8 @@ public class Main {
         try {
             return breedFetcher.getSubBreeds(breed).size();
         } catch (BreedFetcher.BreedNotFoundException bnfe) {
-            System.err.println(bnfe.getMessage());;
+            System.err.println(bnfe.getMessage());
         }
-        return -1;
+        return 0;
     }
 }
