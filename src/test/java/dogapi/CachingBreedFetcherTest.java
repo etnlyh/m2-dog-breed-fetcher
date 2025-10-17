@@ -9,22 +9,12 @@ import static org.junit.jupiter.api.Assertions.*;
 class CachingBreedFetcherTest {
 
     @Test
-    void testCachingAvoidsRedundantCalls()  {
+    void testCachingAvoidsRedundantCalls() throws BreedFetcher.BreedNotFoundException, IOException {
         BreedFetcherForLocalTesting mock = new BreedFetcherForLocalTesting();
         CachingBreedFetcher cachingFetcher = new CachingBreedFetcher(mock);
 
-        List<String> firstCall = null;
-        try {
-            firstCall = cachingFetcher.getSubBreeds("hound");
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        List<String> secondCall = null;
-        try {
-            secondCall = cachingFetcher.getSubBreeds("hound");
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        List<String> firstCall = cachingFetcher.getSubBreeds("hound");
+        List<String> secondCall = cachingFetcher.getSubBreeds("hound");
 
         assertEquals(List.of("afghan", "basset"), firstCall);
         assertEquals(firstCall, secondCall);
@@ -52,24 +42,16 @@ class CachingBreedFetcherTest {
 
     // tests that the count of API calls is correctly recorded
     @Test
-    void testCachingAvoidsRedundantCallsCheckCallsMade() {
+    void testCachingAvoidsRedundantCallsCheckCallsMade() throws BreedFetcher.BreedNotFoundException, IOException {
         BreedFetcherForLocalTesting mock = new BreedFetcherForLocalTesting();
         CachingBreedFetcher cachingFetcher = new CachingBreedFetcher(mock);
 
-        try {
-            cachingFetcher.getSubBreeds("hound");
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        try {
-            cachingFetcher.getSubBreeds("hound");
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        cachingFetcher.getSubBreeds("hound");
+        cachingFetcher.getSubBreeds("hound");
 
         assertEquals(1, cachingFetcher.getCallsMade(),
                 "Fetcher should only be called once due to caching. " +
-                "Make sure that your implementation is recording how many calls have been made!");
+                        "Make sure that your implementation is recording how many calls have been made!");
     }
 
     @Test
@@ -80,7 +62,7 @@ class CachingBreedFetcherTest {
         assertThrows(BreedFetcher.BreedNotFoundException.class, () -> cachingFetcher.getSubBreeds("dragon"));
         assertEquals(1, cachingFetcher.getCallsMade(),
                 "Fetcher should be called even if breed is invalid. " +
-                "Make sure that your implementation is recording how many calls have been made!");
+                        "Make sure that your implementation is recording how many calls have been made!");
     }
 
     @Test
@@ -92,6 +74,6 @@ class CachingBreedFetcherTest {
         assertThrows(BreedFetcher.BreedNotFoundException.class, () -> cachingFetcher.getSubBreeds("dragon"));
         assertEquals(2, cachingFetcher.getCallsMade(),
                 "Fetcher should be called again even if breed is invalid. " +
-                "Make sure that your implementation is recording how many calls have been made!");
+                        "Make sure that your implementation is recording how many calls have been made!");
     }
 }
