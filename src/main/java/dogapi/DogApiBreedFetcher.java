@@ -26,7 +26,7 @@ public class DogApiBreedFetcher implements BreedFetcher {
      * @throws BreedNotFoundException if the breed does not exist (or if the API call fails for any reason)
      */
     @Override
-    public List<String> getSubBreeds(String breed) throws IOException {
+    public List<String> getSubBreeds(String breed) throws IOException, BreedNotFoundException {
         // TODO Task 1: Complete this method based on its provided documentation
         //      and the documentation for the dog.ceo API. You may find it helpful
         //      to refer to the examples of using OkHttpClient from the last lab,
@@ -45,21 +45,17 @@ public class DogApiBreedFetcher implements BreedFetcher {
                 .url(url)
                 .build();
 
-        try {
-            Response response = client.newCall(request).execute();
-            JSONObject responseBody = new JSONObject(response.body().string());
-            if (responseBody.getString("status").equalsIgnoreCase("error")) {
-                throw new BreedNotFoundException(breed);
-            } else {
-                JSONArray responseBodyArray = responseBody.getJSONArray("message");
-                List<String> subBreeds = new ArrayList<>();
-                for (int i = 0; i < responseBodyArray.length(); i++) {
-                    subBreeds.add(responseBodyArray.getString(i));
-                }
-                return subBreeds;
-            }
-        } catch (BreedNotFoundException bnfe) {
+        Response response = client.newCall(request).execute();
+        JSONObject responseBody = new JSONObject(response.body().string());
+        if (responseBody.getString("status").equalsIgnoreCase("error")) {
             throw new BreedNotFoundException(breed);
+        } else {
+            JSONArray responseBodyArray = responseBody.getJSONArray("message");
+            List<String> subBreeds = new ArrayList<>();
+            for (int i = 0; i < responseBodyArray.length(); i++) {
+                subBreeds.add(responseBodyArray.getString(i));
+            }
+            return subBreeds;
         }
     }
 }

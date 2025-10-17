@@ -5,7 +5,7 @@ import java.util.List;
 
 public class Main {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         String breed = "hound";
         BreedFetcher breedFetcher = new CachingBreedFetcher(new BreedFetcherForLocalTesting());
         int result = getNumberOfSubBreeds(breed, breedFetcher);
@@ -24,13 +24,14 @@ public class Main {
      * @return the number of sub breeds. Zero should be returned if there are no sub breeds
      * returned by the fetcher
      */
-    public static int getNumberOfSubBreeds(String breed, BreedFetcher breedFetcher) {
+    public static int getNumberOfSubBreeds(String breed, BreedFetcher breedFetcher) throws IOException {
         // TODO Task 3 implement this code so that it is entirely consistent with its provided documentation.
         // return statement included so that the starter code can compile and run.
         try {
             return breedFetcher.getSubBreeds(breed).size();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+        } catch (BreedFetcher.BreedNotFoundException bnfe) {
+            System.err.println(bnfe.getMessage());;
         }
+        return -1;
     }
 }
