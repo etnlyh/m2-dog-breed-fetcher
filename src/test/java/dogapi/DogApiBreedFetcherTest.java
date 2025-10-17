@@ -12,7 +12,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class DogApiBreedFetcherTest {
 
     @Test
-    void testValidBreedReturnsSubBreeds() throws BreedFetcher.BreedNotFoundException {
+    void testValidBreedReturnsSubBreeds() throws BreedFetcher.BreedNotFoundException, IOException{
         BreedFetcher fetcher = new DogApiBreedFetcher();
         List<String> subBreeds = null;
         try {
