@@ -2,21 +2,19 @@ package dogapi;
 
 import org.junit.jupiter.api.Test;
 
-import java.io.IOException;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 class MainTest {
 
     @Test
-    void getNumberOfSubBreedsValidBreed() throws IOException {
+    void getNumberOfSubBreedsValidBreed() {
         BreedFetcherForLocalTesting mock = new BreedFetcherForLocalTesting();
 
         assertEquals(2, Main.getNumberOfSubBreeds("hound", mock));
     }
 
     @Test
-    void getNumberOfSubBreedsInvalidBreed() throws IOException {
+    void getNumberOfSubBreedsInvalidBreed() {
         BreedFetcherForLocalTesting mock = new BreedFetcherForLocalTesting();
 
         assertEquals(0, Main.getNumberOfSubBreeds("cat", mock));
