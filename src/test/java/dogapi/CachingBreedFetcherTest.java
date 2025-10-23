@@ -1,8 +1,6 @@
 package dogapi;
 
 import org.junit.jupiter.api.Test;
-
-import java.io.IOException;
 import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -13,18 +11,8 @@ class CachingBreedFetcherTest {
         BreedFetcherForLocalTesting mock = new BreedFetcherForLocalTesting();
         CachingBreedFetcher cachingFetcher = new CachingBreedFetcher(mock);
 
-        List<String> firstCall = null;
-        try {
-            firstCall = cachingFetcher.getSubBreeds("hound");
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        List<String> secondCall = null;
-        try {
-            secondCall = cachingFetcher.getSubBreeds("hound");
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        List<String> firstCall = cachingFetcher.getSubBreeds("hound");
+        List<String> secondCall = cachingFetcher.getSubBreeds("hound");
 
         assertEquals(List.of("afghan", "basset"), firstCall);
         assertEquals(firstCall, secondCall);
@@ -52,7 +40,7 @@ class CachingBreedFetcherTest {
 
     // tests that the count of API calls is correctly recorded
     @Test
-    void testCachingAvoidsRedundantCallsCheckCallsMade() throws BreedFetcher.BreedNotFoundException, IOException {
+    void testCachingAvoidsRedundantCallsCheckCallsMade() throws BreedFetcher.BreedNotFoundException {
         BreedFetcherForLocalTesting mock = new BreedFetcherForLocalTesting();
         CachingBreedFetcher cachingFetcher = new CachingBreedFetcher(mock);
 
